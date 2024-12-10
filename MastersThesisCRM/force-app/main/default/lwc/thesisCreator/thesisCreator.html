@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="Thesis Creator" icon-name="standard:document">
+        <div class="slds-p-around_medium">
+            <!-- Input Section -->
+            <template if:false={showRecords}>
+                <div class="slds-m-bottom_medium">
+                    <lightning-input 
+                        type="number" 
+                        label="Number of Records to Create"
+                        value={numberOfRecords}
+                        onchange={handleNumberChange}
+                        min="1"
+                        max="100">
+                    </lightning-input>
+                    
+                    <lightning-button 
+                        label="Create Records" 
+                        onclick={handleCreateRecords}
+                        variant="brand"
+                        class="slds-m-top_small">
+                    </lightning-button>
+                </div>
+            </template>
+
+            <!-- Data Table and Action Buttons -->
+            <template if:true={showRecords}>
+                <div class="slds-m-top_medium">
+                    <lightning-datatable
+                        key-field="Id"
+                        data={thesisRecords}
+                        columns={columns}
+                        hide-checkbox-column>
+                    </lightning-datatable>
+
+                    <div class="slds-m-top_small">
+                        <lightning-button 
+                            label="Update Records"
+                            onclick={handleUpdateRecords}
+                            variant="success">
+                        </lightning-button>
+
+                        <lightning-button 
+                            label="Delete Updated Records"
+                            onclick={handleDeleteRecords}
+                            variant="destructive"
+                            class="slds-m-left_small">
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
