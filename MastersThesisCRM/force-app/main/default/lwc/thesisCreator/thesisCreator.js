@@ -10,6 +10,7 @@ export default class ThesisCreator extends LightningElement {
     @track numberOfRecords = 1; // Input for number of records to create
     @track thesisRecords; // Holds the inserted records
     @track showRecords = false; // Controls display of the datatable
+    @track isLoading = false;
 
     // Table columns
     columns = [
@@ -31,18 +32,33 @@ export default class ThesisCreator extends LightningElement {
 
     // Handle the change in number input
     handleNumberChange(event) {
-        this.numberOfRecords = parseInt(event.target.value, 10);
+        const value = parseInt(event.target.value, 10);
+        if (value < 1) {
+            this.numberOfRecords = 1;
+        } else if (value > 10000) { // Set a reasonable upper limit based on Salesforce DML limits
+            this.showToast('Warning', 'Maximum 10000 records can be created due to Salesforce limits', 'warning');
+            this.numberOfRecords = 10000;
+        } else {
+            this.numberOfRecords = value;
+        }
     }
 
     // Create records
     async handleCreateRecords() {
+        this.isLoading = true;
+        if (this.numberOfRecords < 1) {
+            this.showToast('Error', 'Please enter a number greater than 0', 'error');
+            return;
+        }
         try {
             const result = await createThesisRecords({ numberOfRecords: this.numberOfRecords });
             this.thesisRecords = result;
-            this.showRecords = true; // Show records after insertion
+            this.showRecords = true;
             this.showToast('Success', `Successfully created ${this.numberOfRecords} thesis records`, 'success');
         } catch (error) {
             this.showToast('Error', error.body.message, 'error');
+        } finally {
+            this.isLoading = false;
         }
     }
 

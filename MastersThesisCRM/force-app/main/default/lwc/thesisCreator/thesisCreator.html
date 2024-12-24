@@ -10,7 +10,9 @@
                         value={numberOfRecords}
                         onchange={handleNumberChange}
                         min="1"
-                        max="100">
+                        max="10000"
+                        message-when-range-underflow="Minimum 1 record required"
+                        class="slds-m-bottom_small">
                     </lightning-input>
                     
                     <lightning-button 
@@ -25,6 +27,12 @@
             <!-- Data Table and Action Buttons -->
             <template if:true={showRecords}>
                 <div class="slds-m-top_medium">
+                    <lightning-button 
+                        label="Refresh"
+                        onclick={handleRefresh}
+                        variant="neutral"
+                        class="slds-m-right_small">
+                    </lightning-button>
                     <lightning-datatable
                         key-field="Id"
                         data={thesisRecords}
